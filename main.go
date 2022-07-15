@@ -1,7 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+
+	_ "batch/main/database"
+	"batch/main/jobs"
+)
 
 func main() {
-	fmt.Println("hello world")
+	finished := make(chan bool)
+	jobs.Start(finished)
+	<-finished
+
+	fmt.Print("Execution ended")
 }

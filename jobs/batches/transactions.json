@@ -1,0 +1,17 @@
+[
+    {
+        "Code": 1,
+        "Amount": 43.2,
+        "OpType": "IN"
+    },
+    {
+        "Code": 2,
+        "Amount": 50,
+        "OpType": "OUT"
+    },
+    {
+        "Code": 10,
+        "Amount": 200,
+        "OpType": "IN"
+    }
+]
