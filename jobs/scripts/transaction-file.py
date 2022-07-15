@@ -1,11 +1,12 @@
+import os
 import mysql.connector
 import json
 
 mydb = mysql.connector.connect(
-  host="localhost",
-  user="root",
-  password="password",
-  database="batchbenchmark"
+  host=os.getenv('DB_URL'),
+  user=os.getenv('DB_USER'),
+  password=os.getenv('DB_PASSWORD'),
+  database=os.getenv('DB_NAME')
 )
 
 transactions_file = open('jobs/batches/transactions.json')
