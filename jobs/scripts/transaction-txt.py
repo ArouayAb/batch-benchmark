@@ -12,8 +12,6 @@ transactions_file = open('jobs/batches/transactions.json')
 
 transactions = json.load(transactions_file)
 
-print(transactions)
-
 mycursor = mydb.cursor()
 for transaction in transactions:
     sql = f"UPDATE clients SET balance = balance {'+' if transaction['OpType']=='IN' else '-'} {transaction['Amount']} WHERE code = {transaction['Code']}"
@@ -21,5 +19,3 @@ for transaction in transactions:
     mycursor.execute(sql)
 
     mydb.commit()
-
-print(mycursor.rowcount, "record(s) affected")
