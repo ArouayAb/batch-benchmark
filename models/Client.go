@@ -7,7 +7,7 @@ type Client struct {
 	Name        string
 	Balance     float64
 	Mail        string
-	Transaction []Transaction `gorm:"foreignKey:ClientID;references:Code"`
+	Transaction []Transaction `gorm:"foreignKey:ClientID"`
 	CreatedAt   time.Time
 	UpdatedAt   time.Time
 }

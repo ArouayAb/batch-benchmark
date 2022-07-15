@@ -2,29 +2,34 @@ package seeders
 
 import (
 	"batch/main/models"
+	"math/rand"
+	"strconv"
 	"time"
 
 	"gorm.io/gorm"
 )
 
 func Benchmark(dbCon *gorm.DB) {
-	var transaction = models.Transaction{
-		OperationCode: 1,
-		ClientID:      1,
-		Amount:        43.2,
-		OperationType: "IN",
-		OperationDate: time.Now(),
+	for i := 1; i <= 20; i++ {
+		dbCon.Create(&models.Client{
+			Name:      "Client" + strconv.Itoa(i),
+			Balance:   500 * float64(i),
+			Mail:      "client" + strconv.Itoa(i) + "@mail.com",
+			CreatedAt: time.Now(),
+			UpdatedAt: time.Now(),
+		})
 	}
 
-	var client = models.Client{
-		Code:        1,
-		Name:        "test",
-		Balance:     423.523,
-		Mail:        "sdcoiahu@oihsdf.csd",
-		Transaction: []models.Transaction{transaction},
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
-	}
+	operationsTypes := []models.OperationType{models.IN, models.OUT}
 
-	dbCon.Create(&client)
+	for k := 1; k <= 20; k++ {
+		for j := 1; j <= 3; j++ {
+			dbCon.Create(&models.Transaction{
+				ClientID:      uint(k),
+				Amount:        90 * float64(rand.Intn(3)+1),
+				OperationType: operationsTypes[rand.Intn(2)],
+				OperationDate: time.Now(),
+			})
+		}
+	}
 }
