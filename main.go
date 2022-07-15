@@ -13,5 +13,4 @@ func main() {
 	<-finished
 
 	fmt.Print("Execution ended")
-
 }
