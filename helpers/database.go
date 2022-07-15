@@ -19,7 +19,7 @@ func seed(db *gorm.DB) {
 	for i := 1; i <= 20; i++ {
 		db.Create(&models.Client{
 			Name:          "Client" + strconv.Itoa(i),
-			Balance:       300 * float64(i),
+			Balance:       500 * float64(i),
 			Mail:          "client" + strconv.Itoa(i) + "@mail.com",
 			Creation_date: time.Now(),
 			Update_date:   time.Now(),
