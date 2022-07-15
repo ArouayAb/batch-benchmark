@@ -37,6 +37,10 @@ func main() {
 		log.Fatal(errQ)
 	}
 
+	var number_transactions int
+	db.QueryRow("SELECT count(*) FROM transactions").Scan(&number_transactions)
+
+	number_processed := 0
 	for transactions.Next() {
 		var transaction Transaction
 
@@ -50,6 +54,7 @@ func main() {
 
 		if err != nil {
 			log.Fatal(err)
+			break
 		}
 
 		var op string
@@ -62,5 +67,8 @@ func main() {
 		updateQuery := fmt.Sprintf("UPDATE clients SET balance = balance %s %f WHERE code = %d", op, transaction.Amount, transaction.ClientID)
 
 		db.Query(updateQuery)
+		number_processed++
 	}
+
+	log.Println("::", (number_processed/number_transactions)*100, "%", "Completed")
 }
