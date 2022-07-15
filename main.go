@@ -1,10 +1,8 @@
 package main
 
 import (
-	"fmt"
-
-	_ "batch/main/database"
 	"batch/main/jobs"
+	"fmt"
 )
 
 func main() {
