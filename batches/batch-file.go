@@ -29,7 +29,7 @@ func main() {
 
 	fmt.Println(transactions)
 
-	var dsn = "root:password@tcp(localhost:3306)/batch_benchmark_db?charset=utf8mb4"
+	var dsn = "root:password@tcp(localhost:3306)/batch_benchmark_db?charset=utf8mb4&parseTime=True&loc=Local"
 
 	var db, errDb = gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if errDb != nil {
@@ -40,7 +40,6 @@ func main() {
 		client := models.Client{}
 		client.Code = transaction.Code
 		db.First(&client)
-		fmt.Println("Before : ", client)
 		if transaction.OpType == "IN" {
 			client.Balance += transaction.Amount
 		}
