@@ -38,8 +38,6 @@ func main() {
 		os.Getenv("DB_NAME"),
 	))
 
-	// db, err := sql.Open("mysql", "root:password@tcp(localhost:3306)/batch_benchmark_db?charset=utf8mb4&parseTime=True&loc=Local")
-
 	defer db.Close()
 
 	if err != nil {
