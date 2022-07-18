@@ -12,8 +12,11 @@ import (
 	"gorm.io/gorm"
 )
 
+var clientsNumber = 100
+var transactionPerClient = 10
+
 func BenchmarkToDb(dbCon *gorm.DB) {
-	for i := 1; i <= 20; i++ {
+	for i := 1; i <= clientsNumber; i++ {
 		dbCon.Create(&models.Client{
 			Name:      "Client" + strconv.Itoa(i),
 			Balance:   500 * float64(i),
@@ -25,8 +28,8 @@ func BenchmarkToDb(dbCon *gorm.DB) {
 
 	operationsTypes := []models.OperationType{models.IN, models.OUT}
 
-	for k := 1; k <= 20; k++ {
-		for j := 1; j <= 3; j++ {
+	for k := 1; k <= clientsNumber; k++ {
+		for j := 1; j <= transactionPerClient; j++ {
 			dbCon.Create(&models.Transaction{
 				ClientID:      uint(k),
 				Amount:        90 * float64(rand.Intn(3)+1),
