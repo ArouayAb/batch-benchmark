@@ -2,14 +2,17 @@ package seeders
 
 import (
 	"batch/main/models"
+	"encoding/json"
+	"log"
 	"math/rand"
+	"os"
 	"strconv"
 	"time"
 
 	"gorm.io/gorm"
 )
 
-func Benchmark(dbCon *gorm.DB) {
+func BenchmarkToDb(dbCon *gorm.DB) {
 	for i := 1; i <= 20; i++ {
 		dbCon.Create(&models.Client{
 			Name:      "Client" + strconv.Itoa(i),
@@ -31,5 +34,26 @@ func Benchmark(dbCon *gorm.DB) {
 				OperationDate: time.Now(),
 			})
 		}
+	}
+}
+
+func BenchmarkToFile(dbCon *gorm.DB, filePath string) {
+	var transactions []models.Transaction
+	dbCon.Where("operation_date > ?", time.Now().AddDate(0, 0, -1)).Find(&transactions)
+
+	bytes_transactions, errJ := json.Marshal(transactions)
+	if errJ != nil {
+		log.Fatal(errJ)
+	}
+
+	file, errF := os.Create(filePath)
+	if errF != nil {
+		log.Fatal(errF)
+	}
+	defer file.Close()
+
+	_, errW := file.Write(bytes_transactions)
+	if errW != nil {
+		log.Fatal(errW)
 	}
 }

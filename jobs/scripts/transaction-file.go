@@ -13,9 +13,11 @@ import (
 )
 
 type Transaction struct {
-	Code   uint
-	Amount float64
-	OpType string
+	OperationCode uint
+	ClientID      uint
+	Amount        float64
+	OperationType string
+	OperationDate time.Time
 }
 
 func main() {
@@ -23,12 +25,12 @@ func main() {
 
 	var transactions []Transaction
 
-	transactionsFromJson, errIo := script.File("jobs/batches/transactions.json").String()
+	transactionsFromJson, errIo := script.File("jobs/batches/transactions.json").Bytes()
 	if errIo != nil {
 		log.Fatal(errIo)
 	}
 
-	json.Unmarshal([]byte(transactionsFromJson), &transactions)
+	json.Unmarshal(transactionsFromJson, &transactions)
 
 	db, err := sql.Open("mysql", fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
@@ -52,12 +54,12 @@ func main() {
 
 	number_processed := 0
 	for _, transaction := range transactions {
-		if transaction.OpType == "IN" {
+		if transaction.OperationType == "IN" {
 			op = "+"
 		} else {
 			op = "-"
 		}
-		updateQuery := fmt.Sprintf("UPDATE clients SET balance = balance %s %f WHERE code = %d", op, transaction.Amount, transaction.Code)
+		updateQuery := fmt.Sprintf("UPDATE clients SET balance = balance %s %f WHERE code = %d", op, transaction.Amount, transaction.ClientID)
 
 		db.Query(updateQuery)
 		number_processed++

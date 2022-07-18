@@ -20,7 +20,7 @@ mycursor = mydb.cursor()
 number_transactions = len(transactions)
 number_processed = 0
 for transaction in transactions:
-    sql = f"UPDATE clients SET balance = balance {'+' if transaction['OpType']=='IN' else '-'} {transaction['Amount']} WHERE code = {transaction['Code']}"
+    sql = f"UPDATE clients SET balance = balance {'+' if transaction['OperationType']=='IN' else '-'} {transaction['Amount']} WHERE code = {transaction['ClientID']}"
 
     mycursor.execute(sql)
 

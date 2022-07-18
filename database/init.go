@@ -31,5 +31,6 @@ func init() {
 	DbCon.Migrator().DropTable(&models.Client{}, &models.Transaction{})
 	DbCon.AutoMigrate(&models.Client{}, &models.Transaction{})
 
-	seeders.Benchmark(DbCon)
+	seeders.BenchmarkToDb(DbCon)
+	seeders.BenchmarkToFile(DbCon, "jobs/batches/transactions.json")
 }
