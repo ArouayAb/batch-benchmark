@@ -1,51 +1,59 @@
-// package main
+package main
 
-// import (
-// 	"batch-benchmark/models"
-// 	"encoding/json"
-// 	"fmt"
-// 	"log"
+import (
+	"database/sql"
+	"encoding/json"
+	"fmt"
+	"log"
+	"os"
 
-// 	"github.com/bitfield/script"
-// 	"gorm.io/driver/mysql"
-// 	"gorm.io/gorm"
-// )
+	"github.com/bitfield/script"
+	_ "github.com/go-sql-driver/mysql"
+	"github.com/joho/godotenv"
+)
 
-// type Transaction struct {
-// 	Code   uint
-// 	Amount float64
-// 	OpType string
-// }
+type Transaction struct {
+	Code   uint
+	Amount float64
+	OpType string
+}
 
-// func main() {
-// 	var transactions []Transaction
+func main() {
+	godotenv.Load(".env")
+	var transactions []Transaction
 
-// 	transactionsFromJson, errIo := script.File("logfiles/transactions.json").String()
-// 	if errIo != nil {
-// 		log.Fatal(errIo)
-// 	}
+	transactionsFromJson, errIo := script.File("jobs/batches/transactions.json").String()
+	if errIo != nil {
+		log.Fatal(errIo)
+	}
 
-// 	json.Unmarshal([]byte(transactionsFromJson), &transactions)
+	json.Unmarshal([]byte(transactionsFromJson), &transactions)
 
-// 	fmt.Println(transactions)
+	db, err := sql.Open("mysql", fmt.Sprintf(
+		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		os.Getenv("DB_USER"),
+		os.Getenv("DB_PASSWORD"),
+		os.Getenv("DB_URL"),
+		os.Getenv("DB_PORT"),
+		os.Getenv("DB_NAME"),
+	))
 
-// 	var dsn = "root:password@tcp(localhost:3306)/batch_benchmark_db?charset=utf8mb4&parseTime=True&loc=Local"
+	defer db.Close()
 
-// 	var db, errDb = gorm.Open(mysql.Open(dsn), &gorm.Config{})
-// 	if errDb != nil {
-// 		log.Fatal(errDb)
-// 	}
+	if err != nil {
+		log.Fatal(err)
+	}
 
-// 	for _, transaction := range transactions {
-// 		client := models.Client{}
-// 		client.Code = transaction.Code
-// 		db.First(&client)
-// 		if transaction.OpType == "IN" {
-// 			client.Balance += transaction.Amount
-// 		}
-// 		if transaction.OpType == "OUT" {
-// 			client.Balance -= transaction.Amount
-// 		}
-// 		db.Save(&client)
-// 	}
-// }
+	var op string
+
+	for _, transaction := range transactions {
+		if transaction.OpType == "IN" {
+			op = "+"
+		} else {
+			op = "-"
+		}
+		updateQuery := fmt.Sprintf("UPDATE clients SET balance = balance %s %f WHERE code = %d", op, transaction.Amount, transaction.Code)
+
+		db.Query(updateQuery)
+	}
+}
