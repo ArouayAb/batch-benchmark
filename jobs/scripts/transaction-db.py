@@ -1,6 +1,6 @@
 import os
 import mysql.connector
-from datetime import datetime, timedelta
+from datetime import date, timedelta
 
 print(os.getenv('DB_URL'),
   os.getenv('DB_USER'),
@@ -15,7 +15,7 @@ db = mysql.connector.connect(
 )
 
 cursor = db.cursor()
-yesterday = datetime.today() - timedelta(days=1)
+yesterday = date.today() - timedelta(days=1)
 cursor.execute(f"SELECT * FROM transactions WHERE DATE(operation_date) > {yesterday}")
 transactions = cursor.fetchall()
 
