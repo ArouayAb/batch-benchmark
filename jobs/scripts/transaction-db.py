@@ -19,7 +19,8 @@ yesterday = date.today() - timedelta(days=1)
 cursor.execute(f"SELECT * FROM transactions WHERE DATE(operation_date) > {yesterday}")
 transactions = cursor.fetchall()
 
-number_transactions = len(transactions)
+cursor.execute(f"SELECT count(*) FROM transactions WHERE DATE(operation_date) > {yesterday}")
+number_transactions = cursor.fetchone()[0]
 number_processed = 0
 
 for transaction in transactions:
