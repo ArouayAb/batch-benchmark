@@ -47,7 +47,7 @@ func main() {
 	var op string
 
 	var number_transactions int
-	db.QueryRow("SELECT count(*) FROM transactions").Scan(&number_transactions)
+	number_transactions = len(transactions)
 
 	number_processed := 0
 	for _, transaction := range transactions {
