@@ -46,6 +46,10 @@ func main() {
 
 	var op string
 
+	var number_transactions int
+	db.QueryRow("SELECT count(*) FROM transactions").Scan(&number_transactions)
+
+	number_processed := 0
 	for _, transaction := range transactions {
 		if transaction.OpType == "IN" {
 			op = "+"
@@ -55,5 +59,8 @@ func main() {
 		updateQuery := fmt.Sprintf("UPDATE clients SET balance = balance %s %f WHERE code = %d", op, transaction.Amount, transaction.Code)
 
 		db.Query(updateQuery)
+		number_processed++
 	}
+
+	log.Println("::", (number_processed/number_transactions)*100, "%", "Completed")
 }
