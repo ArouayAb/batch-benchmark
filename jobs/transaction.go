@@ -28,13 +28,13 @@ func Start(finished chan bool) {
 	// 	log.Println(cmd.Run())
 	// })
 
-	taskScheduler.Every(10).Seconds().Do(func() {
-		log.Println("job started")
-		cmd := exec.Command("go", "run", "jobs/scripts/transaction-db.go")
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
-		log.Println(cmd.Run())
-	})
+	// taskScheduler.Every(10).Seconds().Do(func() {
+	// 	log.Println("job started")
+	// 	cmd := exec.Command("go", "run", "jobs/scripts/transaction-db.go")
+	// 	cmd.Stdout = os.Stdout
+	// 	cmd.Stderr = os.Stderr
+	// 	log.Println(cmd.Run())
+	// })
 
 	// taskScheduler.Every(10).Seconds().Do(func() {
 	// 	log.Println("job started")
@@ -43,6 +43,22 @@ func Start(finished chan bool) {
 	// 	cmd.Stderr = os.Stderr
 	// 	log.Println(cmd.Run())
 	// })
+
+	// taskScheduler.Every(30).Seconds().Do(func() {
+	// 	log.Println("job started")
+	// 	cmd := exec.Command("node", "jobs/scripts/transaction-db.js")
+	// 	cmd.Stdout = os.Stdout
+	// 	cmd.Stderr = os.Stderr
+	// 	log.Println(cmd.Run())
+	// })
+
+	taskScheduler.Every(30).Seconds().Do(func() {
+		log.Println("job started")
+		cmd := exec.Command("node", "jobs/scripts/transaction-file.js")
+		cmd.Stdout = os.Stdout
+		cmd.Stderr = os.Stderr
+		log.Println(cmd.Run())
+	})
 
 	taskScheduler.StartAsync()
 }
