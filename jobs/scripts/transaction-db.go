@@ -19,7 +19,7 @@ type Transaction struct {
 }
 
 func main() {
-	fmt.Println("Hello")
+	start := time.Now()
 
 	db, err := sql.Open("mysql", fmt.Sprintf(
 		"%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
@@ -46,7 +46,7 @@ func main() {
 	}
 
 	var number_transactions int
-	db.QueryRow("SELECT count(*) FROM transactions").Scan(&number_transactions)
+	db.QueryRow(fmt.Sprintf("SELECT count(*) from transactions WHERE DATE(operation_date) > \"%s\"", yesterdayTime)).Scan(&number_transactions)
 
 	number_processed := 0
 	for transactions.Next() {
@@ -78,5 +78,7 @@ func main() {
 		number_processed++
 	}
 
-	log.Println("::", (number_processed/number_transactions)*100, "%", "Completed")
+	elapsed := time.Since(start)
+
+	log.Println("::", (number_processed/number_transactions)*100, "%", "Completed in", elapsed)
 }

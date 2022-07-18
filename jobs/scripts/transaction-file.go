@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/bitfield/script"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/joho/godotenv"
 )
 
 type Transaction struct {
@@ -19,7 +19,8 @@ type Transaction struct {
 }
 
 func main() {
-	godotenv.Load(".env")
+	start := time.Now()
+
 	var transactions []Transaction
 
 	transactionsFromJson, errIo := script.File("jobs/batches/transactions.json").String()
@@ -62,5 +63,7 @@ func main() {
 		number_processed++
 	}
 
-	log.Println("::", (number_processed/number_transactions)*100, "%", "Completed")
+	elapsed := time.Since(start)
+
+	log.Println("::", (number_processed/number_transactions)*100, "%", "Completed in", elapsed.String())
 }

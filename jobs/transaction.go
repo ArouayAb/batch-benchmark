@@ -36,5 +36,13 @@ func Start(finished chan bool) {
 	// 	log.Println(cmd.Run())
 	// })
 
+	// taskScheduler.Every(5).Seconds().Do(func() {
+	// 	log.Println("job started")
+	// 	cmd := exec.Command("go", "run", "jobs/scripts/transaction-file.go")
+	// 	cmd.Stdout = os.Stdout
+	// 	cmd.Stderr = os.Stderr
+	// 	log.Println(cmd.Run())
+	// })
+
 	taskScheduler.StartAsync()
 }

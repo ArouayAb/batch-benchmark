@@ -1,11 +1,10 @@
 import os
+import time
 import mysql.connector
 from datetime import date, timedelta
+from timeit import default_timer as timer
 
-print(os.getenv('DB_URL'),
-  os.getenv('DB_USER'),
-  os.getenv('DB_PASSWORD'),
-  os.getenv('DB_NAME'))
+start = timer()
 
 db = mysql.connector.connect(
   host=os.getenv('DB_URL'),
@@ -15,9 +14,13 @@ db = mysql.connector.connect(
 )
 
 cursor = db.cursor()
+
 yesterday = date.today() - timedelta(days=1)
 cursor.execute(f"SELECT * FROM transactions WHERE DATE(operation_date) > {yesterday}")
 transactions = cursor.fetchall()
+
+number_transactions = len(transactions)
+number_processed = 0
 
 for transaction in transactions:
     if transaction[3] == 'IN':
@@ -28,3 +31,9 @@ for transaction in transactions:
     cursor.execute(sql, (transaction[2], transaction[1]))
 
     db.commit()
+    number_processed += 1
+
+end = timer()
+elapsed = end - start
+
+print('::', (number_processed / number_transactions) * 100, '%', 'Completed in', str(elapsed) + 's')

@@ -1,6 +1,9 @@
 import os
 import mysql.connector
 import json
+from timeit import default_timer as timer
+
+start = timer()
 
 mydb = mysql.connector.connect(
   host=os.getenv('DB_URL'),
@@ -28,6 +31,9 @@ try:
 except Exception as Error:
   print(f"{Error=}")
 
-print('::', (number_processed / number_transactions) * 100, '%', 'Completed')
+end = timer()
+elapsed = end - start
+
+print('::', (number_processed / number_transactions) * 100, '%', 'Completed in', str(elapsed) + 's')
   
 
