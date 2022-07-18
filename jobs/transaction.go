@@ -12,7 +12,7 @@ import (
 var taskScheduler = gocron.NewScheduler(time.UTC)
 
 func Start(finished chan bool) {
-	// taskScheduler.Every(5).Seconds().Do(func() {
+	// taskScheduler.Every(30).Seconds().Do(func() {
 	// 	log.Println("job started")
 	// 	cmd := exec.Command("python", "jobs/scripts/transaction-file.py")
 	// 	cmd.Stdout = os.Stdout
@@ -20,7 +20,7 @@ func Start(finished chan bool) {
 	// 	log.Println(cmd.Run())
 	// })
 
-	// taskScheduler.Every(5).Seconds().Do(func() {
+	// taskScheduler.Every(1).Minutes().Do(func() {
 	// 	log.Println("job started")
 	// 	cmd := exec.Command("python", "jobs/scripts/transaction-db.py")
 	// 	cmd.Stdout = os.Stdout
@@ -28,7 +28,7 @@ func Start(finished chan bool) {
 	// 	log.Println(cmd.Run())
 	// })
 
-	taskScheduler.Every(5).Seconds().Do(func() {
+	taskScheduler.Every(10).Seconds().Do(func() {
 		log.Println("job started")
 		cmd := exec.Command("go", "run", "jobs/scripts/transaction-db.go")
 		cmd.Stdout = os.Stdout
@@ -36,7 +36,7 @@ func Start(finished chan bool) {
 		log.Println(cmd.Run())
 	})
 
-	// taskScheduler.Every(5).Seconds().Do(func() {
+	// taskScheduler.Every(10).Seconds().Do(func() {
 	// 	log.Println("job started")
 	// 	cmd := exec.Command("go", "run", "jobs/scripts/transaction-file.go")
 	// 	cmd.Stdout = os.Stdout

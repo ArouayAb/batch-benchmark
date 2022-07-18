@@ -13,7 +13,7 @@ import (
 )
 
 var clientsNumber = 100
-var transactionPerClient = 10
+var transactionPerClient = 50
 
 func BenchmarkToDb(dbCon *gorm.DB) {
 	for i := 1; i <= clientsNumber; i++ {

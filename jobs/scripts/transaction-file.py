@@ -31,6 +31,9 @@ for transaction in transactions:
 end = timer()
 elapsed = end - start
 
+mycursor.close()
+mydb.close()
+
 print('::', (number_processed / number_transactions) * 100, '%', 'Completed in', str(elapsed) + 's')
   
 
