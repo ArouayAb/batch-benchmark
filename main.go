@@ -1,10 +1,10 @@
 package main
 
 import (
-	"batch/main/jobs"
 	"fmt"
 
 	_ "batch/main/database"
+	"batch/main/jobs"
 
 	"github.com/joho/godotenv"
 )

@@ -14,10 +14,12 @@ import (
 
 var clientsNumber = 100
 var transactionPerClient = 50
+var clients []models.Client
+var transactions []models.Transaction
 
-func BenchmarkToDb(dbCon *gorm.DB) {
+func BenchmarkToDb(db *gorm.DB) {
 	for i := 1; i <= clientsNumber; i++ {
-		dbCon.Create(&models.Client{
+		clients = append(clients, models.Client{
 			Name:      "Client" + strconv.Itoa(i),
 			Balance:   500 * float64(i),
 			Mail:      "client" + strconv.Itoa(i) + "@mail.com",
@@ -30,7 +32,7 @@ func BenchmarkToDb(dbCon *gorm.DB) {
 
 	for k := 1; k <= clientsNumber; k++ {
 		for j := 1; j <= transactionPerClient; j++ {
-			dbCon.Create(&models.Transaction{
+			transactions = append(transactions, models.Transaction{
 				ClientID:      uint(k),
 				Amount:        90 * float64(rand.Intn(3)+1),
 				OperationType: operationsTypes[rand.Intn(2)],
@@ -38,6 +40,9 @@ func BenchmarkToDb(dbCon *gorm.DB) {
 			})
 		}
 	}
+
+	db.Create(&clients)
+	db.Create(&transactions)
 }
 
 func BenchmarkToFile(dbCon *gorm.DB, filePath string) {
