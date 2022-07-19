@@ -14,6 +14,7 @@ import (
 
 var clientsNumber = 100
 var transactionPerClient = 50
+
 var clients []models.Client
 var transactions []models.Transaction
 
